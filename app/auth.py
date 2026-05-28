@@ -20,8 +20,11 @@ def _oidc_metadata() -> dict:
     if not discovery_url:
         raise AuthError("Auth0 OIDC discovery URL is not configured.")
 
-    response = requests.get(discovery_url, timeout=5)
-    response.raise_for_status()
+    try:
+        response = requests.get(discovery_url, timeout=5)
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise AuthError("Auth0 discovery metadata could not be loaded.") from exc
     return response.json()
 
 
@@ -57,19 +60,27 @@ def build_oidc_auth_url() -> str:
 
 def exchange_code_for_tokens(code: str) -> dict:
     metadata = _oidc_metadata()
-    response = requests.post(
-        metadata["token_endpoint"],
-        data={
-            "code": code,
-            "client_id": current_app.config["AUTH0_CLIENT_ID"],
-            "client_secret": current_app.config["AUTH0_CLIENT_SECRET"],
-            "redirect_uri": callback_url(),
-            "grant_type": "authorization_code",
-        },
-        timeout=5,
-    )
+    try:
+        response = requests.post(
+            metadata["token_endpoint"],
+            data={
+                "code": code,
+                "client_id": current_app.config["AUTH0_CLIENT_ID"],
+                "client_secret": current_app.config["AUTH0_CLIENT_SECRET"],
+                "redirect_uri": callback_url(),
+                "grant_type": "authorization_code",
+            },
+            timeout=5,
+        )
+    except requests.RequestException as exc:
+        raise AuthError("Auth0 token endpoint could not be reached.") from exc
+
     if response.status_code != 200:
-        raise AuthError("Auth0 rejected the authorization code.")
+        detail = response.text[:500]
+        raise AuthError(
+            f"Auth0 rejected the authorization code. "
+            f"Status={response.status_code}; response={detail}"
+        )
     return response.json()
 
 

@@ -109,7 +109,8 @@ def auth_callback():
         if claims.get("nonce") != session.get("oidc_nonce"):
             raise AuthError("The ID token nonce does not match this login attempt.")
         create_authenticated_session(claims, source="auth0-direct")
-    except (AuthError, KeyError):
+    except (AuthError, KeyError) as exc:
+        current_app.logger.warning("Auth0 callback failed: %s", exc)
         session.clear()
         return render_template(
             "error.html",
