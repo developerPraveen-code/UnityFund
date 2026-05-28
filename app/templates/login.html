@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Login | LOGIN_PAGE{% endblock %}
+{% block content %}
+<section class="login-panel" aria-label="Login">
+  <div class="brand">
+    <span class="brand-mark">LP</span>
+    <span>LOGIN_PAGE</span>
+  </div>
+  <h1>Sign in to continue</h1>
+  <p class="muted">Access is protected with Auth0 OpenID Connect and F5 BIG-IP APM.</p>
+  <form method="post" action="{{ url_for('main.start_login') }}">
+    <button class="auth-button" type="submit">
+      <span class="auth-mark">A</span>
+      Login with Auth0
+    </button>
+  </form>
+</section>
+{% endblock %}

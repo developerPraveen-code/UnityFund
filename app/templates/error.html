@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | LOGIN_PAGE{% endblock %}
+{% block content %}
+<section class="login-panel" aria-label="Error">
+  <div class="brand">
+    <span class="brand-mark">LP</span>
+    <span>LOGIN_PAGE</span>
+  </div>
+  <h1>{{ title }}</h1>
+  <p class="muted">{{ message }}</p>
+  <a class="link-button" href="{{ url_for('main.login') }}">Return to login</a>
+</section>
+{% endblock %}
