@@ -25,6 +25,8 @@ LOGIN_PAGE/
   docs/
     deployment.md
   .env.example
+  .vercelignore
+  index.py
   requirements.txt
   run.py
   wsgi.py
@@ -61,3 +63,33 @@ Application Login URI: leave blank for local HTTP testing
 ```
 
 Production deployments should run behind HTTPS and F5 BIG-IP APM. See [docs/deployment.md](docs/deployment.md) and [f5/apm-auth0-oidc.md](f5/apm-auth0-oidc.md).
+
+## Deploy To Vercel
+
+This repo includes `index.py`, which exposes the Flask `app` object Vercel expects for Python/Flask deployments.
+
+1. Go to Vercel and choose **Add New > Project**.
+2. Import the GitHub repo `developerPraveen-code/oidc`.
+3. Keep the framework preset as **Other** if Vercel asks.
+4. Add these Environment Variables in Vercel Project Settings:
+
+```env
+SECRET_KEY=generate-a-long-random-secret
+SESSION_COOKIE_SECURE=true
+APP_BASE_URL=https://your-vercel-project.vercel.app
+AUTH0_DOMAIN=dev-vq8bl6lh7ac0zurf.us.auth0.com
+AUTH0_CLIENT_ID=your-auth0-client-id
+AUTH0_CLIENT_SECRET=your-auth0-client-secret
+AUTH0_AUDIENCE=
+PREFER_F5_AUTH=false
+```
+
+5. In Auth0, add your Vercel URL:
+
+```text
+Allowed Callback URLs: https://your-vercel-project.vercel.app/auth/callback
+Allowed Logout URLs: https://your-vercel-project.vercel.app/login
+Allowed Web Origins: https://your-vercel-project.vercel.app
+```
+
+6. Deploy. Future pushes to `main` will redeploy automatically.
