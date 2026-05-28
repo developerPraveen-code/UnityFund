@@ -51,6 +51,7 @@ def build_oidc_auth_url() -> str:
         "scope": "openid email profile",
         "state": state,
         "nonce": nonce,
+        "prompt": "login",
     }
     if current_app.config["AUTH0_AUDIENCE"]:
         params["audience"] = current_app.config["AUTH0_AUDIENCE"]
