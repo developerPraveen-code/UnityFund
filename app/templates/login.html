@@ -10,7 +10,9 @@
   <p class="muted">Access is protected with Auth0 OpenID Connect and F5 BIG-IP APM.</p>
   <form method="post" action="{{ url_for('main.start_login') }}">
     <button class="auth-button" type="submit">
-      <span class="auth-mark">A</span>
+      <span class="auth-logo" aria-hidden="true">
+        <span></span>
+      </span>
       Login with Auth0
     </button>
   </form>
