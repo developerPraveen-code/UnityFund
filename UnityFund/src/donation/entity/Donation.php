@@ -52,6 +52,28 @@ class Donation
         return $stmt->execute();
     }
 
+    public function getRecentDonationsByUser(int $userId, int $limit = 5): array
+    {
+        $sql = "SELECT
+                    donation_id AS \"donationId\",
+                    fra_title AS \"fraTitle\",
+                    category,
+                    amount,
+                    donation_date AS \"donationDate\",
+                    status
+                FROM donations
+                WHERE donee_id = :userId
+                ORDER BY donation_date DESC
+                LIMIT :limit";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // USER STORY #34: Search Donation History
     public function searchDonationHistory(int $doneeId, string $keyword): array
     {

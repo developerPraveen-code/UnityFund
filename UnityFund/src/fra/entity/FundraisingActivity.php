@@ -325,6 +325,27 @@ class FundraisingActivity
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getRecentCampaigns(int $fundraiserId, int $limit = 5): array
+    {
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    title,
+                    category,
+                    status,
+                    start_date AS \"startDate\"
+                FROM fundraising_activities
+                WHERE fundraiser_id = :fundraiserId
+                ORDER BY start_date DESC
+                LIMIT :limit";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':fundraiserId', $fundraiserId, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function searchCompletedFRA(int $fundraiserId, string $keyword): array
     {
         $sql = "SELECT

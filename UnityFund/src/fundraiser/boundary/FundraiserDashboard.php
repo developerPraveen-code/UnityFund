@@ -6,6 +6,8 @@
 
 require_once __DIR__ . '/../../login/boundary/UserSession.php';
 require_once __DIR__ . '/../../fra/controller/ViewFRAController.php';
+require_once __DIR__ . '/../../fra/entity/FundraisingActivity.php';
+require_once __DIR__ . '/../../donation/entity/Donation.php';
 
 $userSession = new UserSession();
 $userSession->requireLogin();
@@ -39,6 +41,39 @@ foreach ($fraList as $fra) {
 
 $totalDonors = 0;
 $averageDonation = 0;
+
+$activities = [];
+try {
+    $fraEntity = new FundraisingActivity();
+    $donationEntity = new Donation();
+
+    foreach ($fraEntity->getRecentCampaigns($user['id'], 5) as $fra) {
+        $activities[] = [
+            'type'   => 'campaign',
+            'icon'   => '▦',
+            'label'  => 'Campaign Created',
+            'detail' => $fra['title'] . ' &mdash; ' . $fra['category'],
+            'status' => $fra['status'],
+            'date'   => $fra['startDate'],
+        ];
+    }
+
+    foreach ($donationEntity->getRecentDonationsByUser($user['id'], 5) as $donation) {
+        $activities[] = [
+            'type'   => 'donation',
+            'icon'   => '💛',
+            'label'  => 'Donation Made',
+            'detail' => '$' . number_format((float)$donation['amount'], 2) . ' to ' . htmlspecialchars($donation['fraTitle']),
+            'status' => $donation['status'],
+            'date'   => $donation['donationDate'],
+        ];
+    }
+
+    usort($activities, fn($a, $b) => strcmp($b['date'], $a['date']));
+    $activities = array_slice($activities, 0, 10);
+} catch (Throwable $e) {
+    $activities = [];
+}
 ?>
 
 <!DOCTYPE html>
@@ -106,9 +141,25 @@ $averageDonation = 0;
 
             <div class="activity-section">
                 <h3>Recent Activity</h3>
-                <div class="activity-box">
-                    No recent activity yet.
-                </div>
+                <?php if (empty($activities)): ?>
+                    <div class="activity-box">No recent activity yet.</div>
+                <?php else: ?>
+                    <div class="activity-list">
+                        <?php foreach ($activities as $act): ?>
+                        <div class="activity-item">
+                            <span class="activity-icon activity-icon--<?= $act['type'] ?>"><?= $act['icon'] ?></span>
+                            <div class="activity-info">
+                                <strong><?= htmlspecialchars($act['label']) ?></strong>
+                                <span><?= $act['detail'] ?></span>
+                            </div>
+                            <div class="activity-meta">
+                                <span class="activity-status activity-status--<?= strtolower($act['status']) ?>"><?= htmlspecialchars($act['status']) ?></span>
+                                <span class="activity-date"><?= htmlspecialchars($act['date']) ?></span>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
         </section>
