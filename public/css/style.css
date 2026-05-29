@@ -472,18 +472,18 @@ textarea:focus {
 .activity-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .activity-card {
-    border-radius: 10px;
-    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
     border-left: 4px solid #e5e7eb;
-    padding: 10px 14px;
+    padding: 7px 12px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    gap: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     transition: box-shadow 0.2s, transform 0.2s;
 }
 
@@ -511,11 +511,11 @@ textarea:focus {
 }
 
 .activity-type-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    padding: 3px 10px;
+    padding: 2px 7px;
     border-radius: 20px;
 }
 
@@ -530,13 +530,13 @@ textarea:focus {
 }
 
 .activity-card-date {
-    font-size: 12px;
+    font-size: 11px;
     color: #6b7280;
     font-weight: 500;
 }
 
 .activity-card-title {
-    font-size: 13px;
+    font-size: 12px;
     color: #1f2937;
     line-height: 1.3;
 }
@@ -549,8 +549,8 @@ textarea:focus {
 .activity-card-footer {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding-top: 3px;
+    gap: 6px;
+    padding-top: 2px;
     border-top: 1px solid rgba(0,0,0,0.05);
 }
 
@@ -561,12 +561,12 @@ textarea:focus {
 }
 
 .activity-status {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 2px 7px;
     border-radius: 20px;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
 }
 
 .activity-status--active {
