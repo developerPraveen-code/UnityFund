@@ -20,7 +20,7 @@ class FundraisingActivity
         $sql = "INSERT INTO fundraising_activities
                     (fundraiser_id, title, description, goal_amount, current_amount, category, status, start_date, end_date, view_count, shortlist_count)
                 VALUES
-                    (:fundraiserId, :title, :description, :goalAmount, 0, :category, 'Active', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY), 0, 0)";
+                    (:fundraiserId, :title, :description, :goalAmount, 0, :category, 'Active', CURRENT_DATE, CURRENT_DATE + INTERVAL '30 days', 0, 0)";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':fundraiserId', $fundraiserId, PDO::PARAM_INT);
@@ -36,19 +36,19 @@ class FundraisingActivity
 
     public function getFRAList(int $fundraiserId): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE fundraiser_id = :fundraiserId
                 ORDER BY fra_id DESC";
@@ -62,19 +62,19 @@ class FundraisingActivity
 
     public function getAllFRA(): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE status = 'Active'
                 ORDER BY fra_id DESC";
@@ -89,19 +89,19 @@ class FundraisingActivity
     {
         $this->increaseViewCount($fraId);
 
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE fra_id = :fraId
                 LIMIT 1";
@@ -156,19 +156,19 @@ class FundraisingActivity
 
     public function searchMyFRA(int $fundraiserId, string $keyword): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE fundraiser_id = :fundraiserId
                 AND (
@@ -190,19 +190,19 @@ class FundraisingActivity
 
     public function searchAllFRA(string $keyword): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE status = 'Active'
                 AND (
@@ -261,19 +261,19 @@ class FundraisingActivity
 
     public function getCompletedFRA(int $fundraiserId): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE fundraiser_id = :fundraiserId
                 AND status = 'Completed'
@@ -288,19 +288,19 @@ class FundraisingActivity
 
     public function searchCompletedFRA(int $fundraiserId, string $keyword): array
     {
-        $sql = "SELECT 
-                    fra_id AS fraId,
-                    fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
                     title,
                     description,
-                    goal_amount AS goalAmount,
-                    current_amount AS amountRaised,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
                     category,
                     status,
-                    start_date AS startDate,
-                    end_date AS endDate,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
                     view_count AS views,
-                    shortlist_count AS shortlistCount
+                    shortlist_count AS \"shortlistCount\"
                 FROM fundraising_activities
                 WHERE fundraiser_id = :fundraiserId
                 AND status = 'Completed'

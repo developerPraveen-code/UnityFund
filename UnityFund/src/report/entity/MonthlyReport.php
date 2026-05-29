@@ -17,10 +17,10 @@ class MonthlyReport
 
     public function generateReport(int $month, int $year): array
     {
-        $donationSql = "SELECT 
-                            COUNT(*) AS totalDonations,
-                            COALESCE(SUM(amount), 0) AS totalFundsRaised,
-                            COALESCE(AVG(amount), 0) AS averageDonation
+        $donationSql = "SELECT
+                            COUNT(*) AS \"totalDonations\",
+                            COALESCE(SUM(amount), 0) AS \"totalFundsRaised\",
+                            COALESCE(AVG(amount), 0) AS \"averageDonation\"
                         FROM donations
                         WHERE MONTH(donation_date) = :month
                         AND YEAR(donation_date) = :year";
@@ -32,7 +32,7 @@ class MonthlyReport
 
         $donationData = $donationStmt->fetch(PDO::FETCH_ASSOC);
 
-        $fraSql = "SELECT COUNT(*) AS completedFRA
+        $fraSql = "SELECT COUNT(*) AS \"completedFRA\"
                    FROM fundraising_activities
                    WHERE status = 'Completed'
                    AND MONTH(end_date) = :month

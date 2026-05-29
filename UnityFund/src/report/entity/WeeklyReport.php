@@ -18,10 +18,10 @@ class WeeklyReport
 
     public function generateWeeklyReport(string $startDate, string $endDate): array
     {
-        $donationSql = "SELECT 
-                            COALESCE(SUM(amount), 0) AS totalFundsRaised,
-                            COUNT(*) AS totalDonations,
-                            COUNT(*) AS totalTransactions
+        $donationSql = "SELECT
+                            COALESCE(SUM(amount), 0) AS \"totalFundsRaised\",
+                            COUNT(*) AS \"totalDonations\",
+                            COUNT(*) AS \"totalTransactions\"
                         FROM donations
                         WHERE donation_date BETWEEN :startDate AND :endDate";
 
@@ -32,7 +32,7 @@ class WeeklyReport
 
         $donationData = $donationStmt->fetch(PDO::FETCH_ASSOC);
 
-        $fraSql = "SELECT COUNT(*) AS completedFRA
+        $fraSql = "SELECT COUNT(*) AS \"completedFRA\"
                    FROM fundraising_activities
                    WHERE status = 'Completed'
                    AND end_date BETWEEN :startDate AND :endDate";

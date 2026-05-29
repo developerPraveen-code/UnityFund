@@ -39,7 +39,7 @@ class Favorite
         $insertSql = "INSERT INTO favorites 
                         (user_id, fra_id, saved_date)
                       VALUES 
-                        (:userId, :fraId, CURDATE())";
+                        (:userId, :fraId, CURRENT_DATE)";
 
         $insertStmt = $this->conn->prepare($insertSql);
         $insertStmt->bindParam(':userId', $userId, PDO::PARAM_INT);
@@ -57,18 +57,18 @@ class Favorite
 
     public function getSavedFRA(int $userId): array
     {
-        $sql = "SELECT 
-                    fa.fra_id AS fraId,
-                    fa.fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fa.fra_id AS \"fraId\",
+                    fa.fundraiser_id AS \"fundraiserId\",
                     fa.title,
                     fa.description,
                     fa.category,
-                    fa.goal_amount AS goalAmount,
-                    fa.current_amount AS currentAmount,
+                    fa.goal_amount AS \"goalAmount\",
+                    fa.current_amount AS \"currentAmount\",
                     fa.status,
-                    fa.view_count AS viewCount,
-                    fa.shortlist_count AS shortlistCount,
-                    f.saved_date AS savedDate
+                    fa.view_count AS \"viewCount\",
+                    fa.shortlist_count AS \"shortlistCount\",
+                    f.saved_date AS \"savedDate\"
                 FROM favorites f
                 INNER JOIN fundraising_activities fa
                     ON f.fra_id = fa.fra_id
@@ -84,18 +84,18 @@ class Favorite
 
     public function searchSavedFRA(int $userId, string $keyword): array
     {
-        $sql = "SELECT 
-                    fa.fra_id AS fraId,
-                    fa.fundraiser_id AS fundraiserId,
+        $sql = "SELECT
+                    fa.fra_id AS \"fraId\",
+                    fa.fundraiser_id AS \"fundraiserId\",
                     fa.title,
                     fa.description,
                     fa.category,
-                    fa.goal_amount AS goalAmount,
-                    fa.current_amount AS currentAmount,
+                    fa.goal_amount AS \"goalAmount\",
+                    fa.current_amount AS \"currentAmount\",
                     fa.status,
-                    fa.view_count AS viewCount,
-                    fa.shortlist_count AS shortlistCount,
-                    f.saved_date AS savedDate
+                    fa.view_count AS \"viewCount\",
+                    fa.shortlist_count AS \"shortlistCount\",
+                    f.saved_date AS \"savedDate\"
                 FROM favorites f
                 INNER JOIN fundraising_activities fa
                     ON f.fra_id = fa.fra_id

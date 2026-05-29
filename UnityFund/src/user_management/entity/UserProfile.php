@@ -67,9 +67,9 @@ class UserProfile
     public function getAllProfiles(): array
     {
         $sql = "SELECT
-                    profile_id AS profileId,
-                    user_id AS userId,
-                    full_name AS fullName,
+                    profile_id AS \"profileId\",
+                    user_id AS \"userId\",
+                    full_name AS \"fullName\",
                     phone,
                     address,
                     role,
@@ -86,9 +86,9 @@ class UserProfile
     public function getProfile(int $profileId): ?array
     {
         $sql = "SELECT
-                    profile_id AS profileId,
-                    user_id AS userId,
-                    full_name AS fullName,
+                    profile_id AS \"profileId\",
+                    user_id AS \"userId\",
+                    full_name AS \"fullName\",
                     phone,
                     address,
                     role,
@@ -146,9 +146,9 @@ class UserProfile
     public function searchUserProfile(string $searchTerm): array
     {
         $sql = "SELECT
-                    profile_id AS profileId,
-                    user_id AS userId,
-                    full_name AS fullName,
+                    profile_id AS \"profileId\",
+                    user_id AS \"userId\",
+                    full_name AS \"fullName\",
                     phone,
                     address,
                     role,

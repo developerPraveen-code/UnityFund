@@ -18,10 +18,10 @@ class DailyReport
 
     public function generateDailyReport(string $selectedDate): array
     {
-        $donationSql = "SELECT 
-                            COALESCE(SUM(amount), 0) AS totalFundsRaised,
-                            COUNT(*) AS totalDonations,
-                            COUNT(*) AS totalTransactions
+        $donationSql = "SELECT
+                            COALESCE(SUM(amount), 0) AS \"totalFundsRaised\",
+                            COUNT(*) AS \"totalDonations\",
+                            COUNT(*) AS \"totalTransactions\"
                         FROM donations
                         WHERE donation_date = :selectedDate";
 
@@ -31,7 +31,7 @@ class DailyReport
 
         $donationData = $donationStmt->fetch(PDO::FETCH_ASSOC);
 
-        $fraSql = "SELECT COUNT(*) AS completedFRA
+        $fraSql = "SELECT COUNT(*) AS \"completedFRA\"
                    FROM fundraising_activities
                    WHERE status = 'Completed'
                    AND end_date = :selectedDate";

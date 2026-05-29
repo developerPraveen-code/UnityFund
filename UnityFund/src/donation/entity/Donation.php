@@ -20,13 +20,13 @@ class Donation
     // USER STORY #35: View Donation History
     public function getDonationHistory(int $doneeId): array
     {
-        $sql = "SELECT 
-                    donation_id AS donationId,
-                    donee_id AS doneeId,
-                    fra_title AS fraTitle,
+        $sql = "SELECT
+                    donation_id AS \"donationId\",
+                    donee_id AS \"doneeId\",
+                    fra_title AS \"fraTitle\",
                     category,
                     amount,
-                    donation_date AS donationDate,
+                    donation_date AS \"donationDate\",
                     status
                 FROM donations
                 WHERE donee_id = :doneeId
@@ -42,13 +42,13 @@ class Donation
     // USER STORY #34: Search Donation History
     public function searchDonationHistory(int $doneeId, string $keyword): array
     {
-        $sql = "SELECT 
-                    donation_id AS donationId,
-                    donee_id AS doneeId,
-                    fra_title AS fraTitle,
+        $sql = "SELECT
+                    donation_id AS \"donationId\",
+                    donee_id AS \"doneeId\",
+                    fra_title AS \"fraTitle\",
                     category,
                     amount,
-                    donation_date AS donationDate,
+                    donation_date AS \"donationDate\",
                     status
                 FROM donations
                 WHERE donee_id = :doneeId

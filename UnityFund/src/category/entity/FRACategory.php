@@ -22,9 +22,9 @@ class FRACategory
     // USER STORY #37: View FRA Category
     public function getAllCategories(): array
     {
-        $sql = "SELECT 
-                    category_id AS categoryId,
-                    category_name AS categoryName,
+        $sql = "SELECT
+                    category_id AS \"categoryId\",
+                    category_name AS \"categoryName\",
                     description,
                     status
                 FROM fra_categories
@@ -39,9 +39,9 @@ class FRACategory
     // USER STORY #37 / #38: Get one FRA Category
     public function getCategory(int $categoryId): ?array
     {
-        $sql = "SELECT 
-                    category_id AS categoryId,
-                    category_name AS categoryName,
+        $sql = "SELECT
+                    category_id AS \"categoryId\",
+                    category_name AS \"categoryName\",
                     description,
                     status
                 FROM fra_categories
@@ -110,9 +110,9 @@ class FRACategory
     // USER STORY #40: Search FRA Category
     public function searchCategory(string $searchTerm): array
     {
-        $sql = "SELECT 
-                    category_id AS categoryId,
-                    category_name AS categoryName,
+        $sql = "SELECT
+                    category_id AS \"categoryId\",
+                    category_name AS \"categoryName\",
                     description,
                     status
                 FROM fra_categories

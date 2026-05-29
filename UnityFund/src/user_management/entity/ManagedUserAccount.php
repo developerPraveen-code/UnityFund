@@ -45,7 +45,7 @@ class ManagedUserAccount
     public function getAllAccounts(): array
     {
         $sql = "SELECT
-                    user_id AS userId,
+                    user_id AS \"userId\",
                     username,
                     email,
                     role,
@@ -64,7 +64,7 @@ class ManagedUserAccount
     public function searchUserAccount(string $username): array
     {
         $sql = "SELECT
-                    user_id AS userId,
+                    user_id AS \"userId\",
                     username,
                     email,
                     role,
@@ -88,7 +88,7 @@ class ManagedUserAccount
     public function getAccount(int $userId): ?array
     {
         $sql = "SELECT
-                    user_id AS userId,
+                    user_id AS \"userId\",
                     username,
                     email,
                     role,
