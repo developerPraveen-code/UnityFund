@@ -26,12 +26,14 @@ if ($page === 'dashboard') {
     };
 }
 
-switch ($page) {
+try {
+    switch ($page) {
 
     case 'login': require_once __DIR__ . '/../src/login/controller/OidcStartController.php'; break;
     case 'auth_callback': require_once __DIR__ . '/../src/login/controller/OidcCallbackController.php'; break;
     case 'logged_out': require_once __DIR__ . '/../src/login/boundary/LoggedOutUI.php'; break;
     case 'logout': require_once __DIR__ . '/../src/login/boundary/LogoutUI.php'; break;
+    case 'diagnostics': require_once __DIR__ . '/../src/shared/boundary/DiagnosticsUI.php'; break;
 
     case 'admin_dashboard': require_once __DIR__ . '/../src/admin/boundary/AdminDashboard.php'; break;
     case 'donee_dashboard': require_once __DIR__ . '/../src/donee/boundary/DoneeDashboard.php'; break;
@@ -84,4 +86,21 @@ switch ($page) {
     default:
         echo "<h1>404 Page Not Found</h1>";
         break;
+    }
+} catch (Throwable $error) {
+    http_response_code(500);
+    $message = $error->getMessage();
+    $isDatabaseError = str_contains($message, 'Database connection failed');
+
+    echo '<h1>' . ($isDatabaseError ? 'Database unavailable' : 'Server error') . '</h1>';
+    if ($isDatabaseError) {
+        echo '<p>UnityFund could not connect to PostgreSQL. Check Vercel environment variables, especially DATABASE_URL.</p>';
+        echo '<p>Open <a href="/index.php?page=diagnostics">diagnostics</a> to verify what Vercel can see.</p>';
+    } else {
+        echo '<p>Something went wrong while processing your request.</p>';
+    }
+
+    if (AuthConfig::bool('APP_DEBUG', false)) {
+        echo '<pre>' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</pre>';
+    }
 }
