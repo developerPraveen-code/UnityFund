@@ -15,7 +15,7 @@ def _bool(name: str, default: bool) -> bool:
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
-    SESSION_COOKIE_NAME = os.getenv("SESSION_COOKIE_NAME", "login_page_session")
+    SESSION_COOKIE_NAME = os.getenv("SESSION_COOKIE_NAME", "unityfund_session")
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = _bool("SESSION_COOKIE_SECURE", True)
     SESSION_COOKIE_SAMESITE = "Lax"
