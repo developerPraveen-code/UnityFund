@@ -150,20 +150,17 @@ try {
                 <?php else: ?>
                     <div class="activity-list">
                         <?php foreach ($activities as $act): ?>
-                        <div class="activity-item">
-                            <div class="activity-dot activity-dot--<?= $act['type'] ?>"></div>
-                            <div class="activity-body">
-                                <div class="activity-row">
-                                    <span class="activity-title">
-                                        <?= htmlspecialchars($act['verb']) ?> &ldquo;<strong><?= htmlspecialchars($act['name']) ?></strong>&rdquo;
-                                    </span>
-                                    <span class="activity-date"><?= htmlspecialchars($act['date']) ?></span>
-                                </div>
-                                <div class="activity-sub">
-                                    <span class="activity-tag activity-tag--<?= $act['type'] ?>"><?= $act['tag'] ?></span>
-                                    <span class="activity-category"><?= htmlspecialchars($act['category']) ?></span>
-                                    <span class="activity-status activity-status--<?= strtolower($act['status']) ?>"><?= htmlspecialchars($act['status']) ?></span>
-                                </div>
+                        <div class="activity-card activity-card--<?= $act['type'] ?>">
+                            <div class="activity-card-header">
+                                <span class="activity-type-label activity-type-label--<?= $act['type'] ?>"><?= $act['tag'] ?></span>
+                                <span class="activity-card-date"><?= htmlspecialchars($act['date']) ?></span>
+                            </div>
+                            <div class="activity-card-title">
+                                <?= htmlspecialchars($act['verb']) ?> &ldquo;<strong><?= htmlspecialchars($act['name']) ?></strong>&rdquo;
+                            </div>
+                            <div class="activity-card-footer">
+                                <span class="activity-category"><?= htmlspecialchars($act['category']) ?></span>
+                                <span class="activity-status activity-status--<?= strtolower($act['status']) ?>"><?= htmlspecialchars($act['status']) ?></span>
                             </div>
                         </div>
                         <?php endforeach; ?>
