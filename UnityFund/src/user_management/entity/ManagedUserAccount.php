@@ -162,6 +162,27 @@ class ManagedUserAccount
             : 'Suspend failed.';
     }
 
+    public function getAccountByEmail(string $email): ?array
+    {
+        $sql = "SELECT
+                    user_id AS \"userId\",
+                    username,
+                    email,
+                    role,
+                    permission,
+                    status
+                FROM managed_user_accounts
+                WHERE email = :email
+                LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        $account = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $account ?: null;
+    }
+
     private function defaultPermission(
         string $role
     ): string

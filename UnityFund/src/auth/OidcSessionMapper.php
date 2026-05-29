@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/AuthConfig.php';
+require_once __DIR__ . '/../user_management/entity/ManagedUserAccount.php';
 
 class OidcSessionMapper
 {
@@ -8,15 +9,38 @@ class OidcSessionMapper
     {
         session_regenerate_id(true);
 
-        $role = $this->roleFromClaims($claims);
+        $role  = $this->roleFromClaims($claims);
+        $email = $claims['email'] ?? '';
+
+        $userId = $this->lookupUserId($email, $role);
+
         $_SESSION['user'] = [
-            'id' => $this->idForRole($role),
-            'email' => $claims['email'] ?? '',
-            'role' => $role,
-            'name' => $claims['name'] ?? $claims['email'] ?? 'Authenticated User',
-            'sub' => $claims['sub'] ?? '',
+            'id'          => $userId,
+            'email'       => $email,
+            'role'        => $role,
+            'name'        => $claims['name'] ?? $email ?? 'Authenticated User',
+            'sub'         => $claims['sub'] ?? '',
             'auth_source' => $source,
         ];
+    }
+
+    private function lookupUserId(string $email, string $role): int
+    {
+        if ($email === '') {
+            return $this->idForRole($role);
+        }
+
+        try {
+            $accountEntity = new ManagedUserAccount();
+            $account = $accountEntity->getAccountByEmail($email);
+            if ($account && isset($account['userId'])) {
+                return (int) $account['userId'];
+            }
+        } catch (Throwable $e) {
+            // DB unavailable — fall back to role-based placeholder
+        }
+
+        return $this->idForRole($role);
     }
 
     private function roleFromClaims(array $claims): string
