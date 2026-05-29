@@ -49,27 +49,31 @@ try {
 
     foreach ($fraEntity->getRecentCampaigns($user['id'], 5) as $fra) {
         $activities[] = [
-            'type'   => 'campaign',
-            'icon'   => '▦',
-            'label'  => 'Campaign Created',
-            'detail' => $fra['title'] . ' &mdash; ' . $fra['category'],
-            'status' => $fra['status'],
-            'date'   => $fra['startDate'],
+            'type'     => 'campaign',
+            'tag'      => 'Campaign',
+            'verb'     => 'Created',
+            'name'     => $fra['title'],
+            'category' => $fra['category'],
+            'status'   => $fra['status'],
+            'date'     => $fra['startDate'] ? date('M j, Y', strtotime($fra['startDate'])) : '',
+            'sort'     => $fra['startDate'] ?? '',
         ];
     }
 
     foreach ($donationEntity->getRecentDonationsByUser($user['id'], 5) as $donation) {
         $activities[] = [
-            'type'   => 'donation',
-            'icon'   => '💛',
-            'label'  => 'Donation Made',
-            'detail' => '$' . number_format((float)$donation['amount'], 2) . ' to ' . htmlspecialchars($donation['fraTitle']),
-            'status' => $donation['status'],
-            'date'   => $donation['donationDate'],
+            'type'     => 'donation',
+            'tag'      => 'Donation',
+            'verb'     => 'Donated $' . number_format((float)$donation['amount'], 2),
+            'name'     => $donation['fraTitle'],
+            'category' => $donation['category'],
+            'status'   => $donation['status'],
+            'date'     => $donation['donationDate'] ? date('M j, Y', strtotime($donation['donationDate'])) : '',
+            'sort'     => $donation['donationDate'] ?? '',
         ];
     }
 
-    usort($activities, fn($a, $b) => strcmp($b['date'], $a['date']));
+    usort($activities, fn($a, $b) => strcmp($b['sort'], $a['sort']));
     $activities = array_slice($activities, 0, 10);
 } catch (Throwable $e) {
     $activities = [];
@@ -147,14 +151,19 @@ try {
                     <div class="activity-list">
                         <?php foreach ($activities as $act): ?>
                         <div class="activity-item">
-                            <span class="activity-icon activity-icon--<?= $act['type'] ?>"><?= $act['icon'] ?></span>
-                            <div class="activity-info">
-                                <strong><?= htmlspecialchars($act['label']) ?></strong>
-                                <span><?= $act['detail'] ?></span>
-                            </div>
-                            <div class="activity-meta">
-                                <span class="activity-status activity-status--<?= strtolower($act['status']) ?>"><?= htmlspecialchars($act['status']) ?></span>
-                                <span class="activity-date"><?= htmlspecialchars($act['date']) ?></span>
+                            <div class="activity-dot activity-dot--<?= $act['type'] ?>"></div>
+                            <div class="activity-body">
+                                <div class="activity-row">
+                                    <span class="activity-title">
+                                        <?= htmlspecialchars($act['verb']) ?> &ldquo;<strong><?= htmlspecialchars($act['name']) ?></strong>&rdquo;
+                                    </span>
+                                    <span class="activity-date"><?= htmlspecialchars($act['date']) ?></span>
+                                </div>
+                                <div class="activity-sub">
+                                    <span class="activity-tag activity-tag--<?= $act['type'] ?>"><?= $act['tag'] ?></span>
+                                    <span class="activity-category"><?= htmlspecialchars($act['category']) ?></span>
+                                    <span class="activity-status activity-status--<?= strtolower($act['status']) ?>"><?= htmlspecialchars($act['status']) ?></span>
+                                </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
