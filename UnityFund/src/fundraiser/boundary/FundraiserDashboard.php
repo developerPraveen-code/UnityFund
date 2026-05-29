@@ -85,7 +85,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>Fundraiser Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=4">
 </head>
 
 <body>
