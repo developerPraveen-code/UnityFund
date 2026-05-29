@@ -7,12 +7,7 @@
   },
   "routes": [
     {
-      "src": "/css/(.*)",
-      "dest": "/UnityFund/public/css/$1"
-    },
-    {
-      "src": "/images/(.*)",
-      "dest": "/UnityFund/public/images/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
