@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../login/boundary/UserSession.php';
 
 $userSession = new UserSession();
@@ -8,77 +9,74 @@ if ($_SESSION['user']['role'] !== 'fundraiser') {
     header('Location: /index.php?page=login');
     exit();
 }
-?>
 
-<?php
+$user = $_SESSION['user'];
 
 require_once __DIR__ . '/../controller/ViewFRAController.php';
 
 $controller = new ViewFRAController();
+$fraList = $controller->getFRAList($user['id']);
 
-$fraList = $controller->getFRAList($_SESSION['user']['id']);
+$activePage = 'my_campaigns';
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>View My FRA</title>
+    <meta charset="UTF-8">
+    <title>My Campaigns</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="page-center">
+<div class="app-layout">
 
-<section class="dashboard-card">
+    <?php require_once __DIR__ . '/../../fundraiser/boundary/FundraiserSidebar.php'; ?>
 
-<h1>My Fundraising Activities</h1>
+    <main class="main-content">
 
-<table class="table">
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="menu-icon">☰</div>
+                <div class="topbar-title">
+                    <h2>My Campaigns</h2>
+                    <p>Fundraiser</p>
+                </div>
+            </div>
+        </header>
 
-<tr>
-<th>ID</th>
-<th>Title</th>
-<th>Status</th>
-<th>Raised</th>
-<th>Goal</th>
-<th>Actions</th>
-</tr>
+        <section class="dashboard-bg">
 
-<?php foreach ($fraList as $fra): ?>
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Raised</th>
+                    <th>Goal</th>
+                    <th>Actions</th>
+                </tr>
 
-<tr>
+                <?php foreach ($fraList as $fra): ?>
+                <tr>
+                    <td><?= $fra['fraId'] ?></td>
+                    <td><?= htmlspecialchars($fra['title']) ?></td>
+                    <td><?= $fra['status'] ?></td>
+                    <td>$<?= number_format((float)$fra['amountRaised'], 2) ?></td>
+                    <td>$<?= number_format((float)$fra['goalAmount'], 2) ?></td>
+                    <td>
+                        <a class="action-link"
+                           href="/index.php?page=edit_fra&fraId=<?= $fra['fraId'] ?>">Edit</a>
+                        &nbsp;|&nbsp;
+                        <a class="action-link"
+                           href="/index.php?page=disable_fra&fraId=<?= $fra['fraId'] ?>">Disable</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
 
-<td><?= $fra['fraId'] ?></td>
-<td><?= htmlspecialchars($fra['title']) ?></td>
-<td><?= $fra['status'] ?></td>
-<td>$<?= $fra['amountRaised'] ?></td>
-<td>$<?= $fra['goalAmount'] ?></td>
+        </section>
 
-<td>
-<a class="action-link"
-href="/index.php?page=edit_fra&fraId=<?= $fra['fraId'] ?>">
-Edit
-</a>
-
-|
-
-<a class="action-link"
-href="/index.php?page=disable_fra&fraId=<?= $fra['fraId'] ?>">
-Disable
-</a>
-</td>
-
-</tr>
-
-<?php endforeach; ?>
-
-</table>
-
-<a href="/index.php?page=fundraiser_dashboard" class="secondary-btn">
-Back
-</a>
-
-</section>
+    </main>
 
 </div>
 

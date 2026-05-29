@@ -248,6 +248,45 @@ class FundraisingActivity
         $stmt->execute();
     }
 
+    public function getFRAById(int $fraId): ?array
+    {
+        $sql = "SELECT
+                    fra_id AS \"fraId\",
+                    fundraiser_id AS \"fundraiserId\",
+                    title,
+                    description,
+                    goal_amount AS \"goalAmount\",
+                    current_amount AS \"amountRaised\",
+                    category,
+                    status,
+                    start_date AS \"startDate\",
+                    end_date AS \"endDate\",
+                    view_count AS views,
+                    shortlist_count AS \"shortlistCount\"
+                FROM fundraising_activities
+                WHERE fra_id = :fraId
+                LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':fraId', $fraId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $fra = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $fra ?: null;
+    }
+
+    public function addToCurrentAmount(int $fraId, float $amount): void
+    {
+        $sql = "UPDATE fundraising_activities
+                SET current_amount = current_amount + :amount
+                WHERE fra_id = :fraId";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':amount', $amount);
+        $stmt->bindParam(':fraId', $fraId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
     private function increaseViewCount(int $fraId): void
     {
         $sql = "UPDATE fundraising_activities

@@ -39,6 +39,19 @@ class Donation
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function createDonation(int $userId, string $fraTitle, string $category, float $amount): bool
+    {
+        $sql = "INSERT INTO donations (donee_id, fra_title, category, amount, donation_date, status)
+                VALUES (:userId, :fraTitle, :category, :amount, CURRENT_DATE, 'Completed')";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':fraTitle', $fraTitle);
+        $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':amount', $amount);
+        return $stmt->execute();
+    }
+
     // USER STORY #34: Search Donation History
     public function searchDonationHistory(int $doneeId, string $keyword): array
     {

@@ -11,12 +11,13 @@ if ($_SESSION['user']['role'] !== 'fundraiser') {
     exit();
 }
 
+$user = $_SESSION['user'];
 $controller = new CreateFRAController();
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $controller->createFRA(
-        $_SESSION['user']['id'],
+        $user['id'],
         $_POST['title'],
         $_POST['description'],
         (float) $_POST['goalAmount'],
@@ -24,61 +25,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 }
 
+$activePage = 'create_fra';
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Create FRA</title>
+    <meta charset="UTF-8">
+    <title>Create Campaign</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="page-center">
+<div class="app-layout">
 
-<section class="dashboard-card">
+    <?php require_once __DIR__ . '/../../fundraiser/boundary/FundraiserSidebar.php'; ?>
 
-<h1>Create Fundraising Activity</h1>
+    <main class="main-content">
 
-<?php if ($message): ?>
-<div class="success-message">
-    <?= htmlspecialchars($message) ?>
-</div>
-<?php endif; ?>
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="menu-icon">☰</div>
+                <div class="topbar-title">
+                    <h2>Create Campaign</h2>
+                    <p>Fundraiser</p>
+                </div>
+            </div>
+        </header>
 
-<form method="POST">
+        <section class="dashboard-bg" style="display:flex;justify-content:center;padding-top:32px">
 
-<div class="form-group">
-<label>Title</label>
-<input type="text" name="title" required>
-</div>
+            <section class="dashboard-card">
 
-<div class="form-group">
-<label>Description</label>
-<textarea name="description" required></textarea>
-</div>
+                <h1>Create Fundraising Activity</h1>
 
-<div class="form-group">
-<label>Goal Amount</label>
-<input type="number" name="goalAmount" step="0.01" required>
-</div>
+                <?php if ($message): ?>
+                <div class="success-message">
+                    <?= htmlspecialchars($message) ?>
+                </div>
+                <?php endif; ?>
 
-<div class="form-group">
-<label>Category</label>
-<input type="text" name="category" required>
-</div>
+                <form method="POST">
 
-<button class="btn-primary" type="submit">
-Create FRA
-</button>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" required>
+                    </div>
 
-<a href="/index.php?page=fundraiser_dashboard" class="secondary-btn">
-Back
-</a>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" required></textarea>
+                    </div>
 
-</form>
+                    <div class="form-group">
+                        <label>Goal Amount</label>
+                        <input type="number" name="goalAmount" step="0.01" required>
+                    </div>
 
-</section>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" name="category" required>
+                    </div>
+
+                    <button class="btn-primary" type="submit">Create FRA</button>
+
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
 
 </div>
 

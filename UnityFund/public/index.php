@@ -56,6 +56,7 @@ try {
     case 'search_completed_history': require_once __DIR__ . '/../src/fra/boundary/SearchHistoryUI.php'; break;
     case 'view_completed_history': require_once __DIR__ . '/../src/fra/boundary/ViewHistoryUI.php'; break;
 
+    case 'make_donation': require_once __DIR__ . '/../src/donation/boundary/DonateFRAUI.php'; break;
     case 'search_donation_history': require_once __DIR__ . '/../src/donation/boundary/SearchDonationHistoryUI.php'; break;
     case 'view_donation_history': require_once __DIR__ . '/../src/donation/boundary/ViewDonationHistoryUI.php'; break;
 

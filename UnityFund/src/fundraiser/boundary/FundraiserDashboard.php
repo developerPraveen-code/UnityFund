@@ -53,66 +53,7 @@ $averageDonation = 0;
 
 <div class="app-layout">
 
-    <aside class="sidebar">
-
-        <div>
-            <div class="sidebar-logo">
-                <img src="/images/unityfund-logo.png" alt="UnityFund Logo" class="sidebar-logo-img">
-            </div>
-
-            <nav class="sidebar-menu">
-
-                <a href="/index.php?page=fundraiser_dashboard" class="sidebar-link active">
-                    ▦ Overview
-                </a>
-
-                <a href="/index.php?page=create_fra" class="sidebar-create-btn">
-                    + New Campaign
-                </a>
-
-                <a href="/index.php?page=view_my_fra" class="sidebar-link">
-                    ▣ My Campaigns
-                </a>
-
-                <a href="/index.php?page=search_my_fra" class="sidebar-link">
-                    🔍 Search My FRA
-                </a>
-
-                <a href="/index.php?page=view_posted_views" class="sidebar-link">
-                    👁 View FRA Views
-                </a>
-
-                <a href="/index.php?page=view_shortlist_count" class="sidebar-link">
-                    ★ View Shortlist Count
-                </a>
-
-                <a href="/index.php?page=view_completed_history" class="sidebar-link">
-                    📜 Completed History
-                </a>
-
-                <a href="/index.php?page=search_completed_history" class="sidebar-link">
-                    🔎 Search History
-                </a>
-
-                <a href="/index.php?page=logout" class="sidebar-link">
-                    ⎋ Logout
-                </a>
-
-            </nav>
-        </div>
-
-        <div class="sidebar-user">
-            <div class="user-avatar">
-                <?= strtoupper(substr($user['name'], 0, 1)) ?>
-            </div>
-
-            <div class="user-info">
-                <strong><?= htmlspecialchars($user['name']) ?></strong>
-                <span>Fundraiser</span>
-            </div>
-        </div>
-
-    </aside>
+    <?php $activePage = 'overview'; require_once __DIR__ . '/FundraiserSidebar.php'; ?>
 
     <main class="main-content">
 

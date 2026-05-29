@@ -1,19 +1,27 @@
 <?php
 
+require_once __DIR__ . '/../../login/boundary/UserSession.php';
 require_once __DIR__ . '/../controller/EditFRAController.php';
 require_once __DIR__ . '/../entity/FundraisingActivity.php';
 
+$userSession = new UserSession();
+$userSession->requireLogin();
+
+if ($_SESSION['user']['role'] !== 'fundraiser') {
+    header('Location: /index.php?page=login');
+    exit();
+}
+
+$user = $_SESSION['user'];
 $entity = new FundraisingActivity();
 $controller = new EditFRAController();
 
 $fraId = (int) ($_GET['fraId'] ?? 0);
-
-$fra = $entity->getFRA($fraId);
+$fra = $entity->getFRAById($fraId);
 
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $controller->updateFRA(
         $fraId,
         $_POST['title'],
@@ -21,73 +29,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         (float) $_POST['goalAmount'],
         $_POST['status']
     );
-
     $message = 'Fundraising activity updated successfully.';
-    $fra = $entity->getFRA($fraId);
+    $fra = $entity->getFRAById($fraId);
 }
+
+$activePage = 'my_campaigns';
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Edit FRA</title>
-<link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>Edit Campaign</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
 
-<div class="page-center">
+<div class="app-layout">
 
-<section class="dashboard-card">
+    <?php require_once __DIR__ . '/../../fundraiser/boundary/FundraiserSidebar.php'; ?>
 
-<h1>Edit FRA</h1>
+    <main class="main-content">
 
-<?php if ($message): ?>
-<div class="success-message">
-<?= $message ?>
-</div>
-<?php endif; ?>
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="menu-icon">☰</div>
+                <div class="topbar-title">
+                    <h2>Edit Campaign</h2>
+                    <p>Fundraiser</p>
+                </div>
+            </div>
+        </header>
 
-<form method="POST">
+        <section class="dashboard-bg" style="display:flex;justify-content:center;padding-top:32px">
 
-<div class="form-group">
-<label>Title</label>
-<input type="text" name="title"
-value="<?= htmlspecialchars($fra['title']) ?>" required>
-</div>
+            <section class="dashboard-card">
 
-<div class="form-group">
-<label>Description</label>
-<textarea name="description" required><?= htmlspecialchars($fra['description']) ?></textarea>
-</div>
+                <h1>Edit FRA</h1>
 
-<div class="form-group">
-<label>Goal Amount</label>
-<input type="number" name="goalAmount"
-value="<?= $fra['goalAmount'] ?>" required>
-</div>
+                <?php if ($message): ?>
+                <div class="success-message"><?= htmlspecialchars($message) ?></div>
+                <?php endif; ?>
 
-<div class="form-group">
-<label>Status</label>
+                <form method="POST">
 
-<select name="status">
-<option value="Active">Active</option>
-<option value="Disabled">Disabled</option>
-</select>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title"
+                               value="<?= htmlspecialchars($fra['title']) ?>" required>
+                    </div>
 
-</div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" required><?= htmlspecialchars($fra['description']) ?></textarea>
+                    </div>
 
-<button class="btn-primary">
-Save Changes
-</button>
+                    <div class="form-group">
+                        <label>Goal Amount</label>
+                        <input type="number" name="goalAmount"
+                               value="<?= $fra['goalAmount'] ?>" step="0.01" required>
+                    </div>
 
-<a href="/index.php?page=view_my_fra" class="secondary-btn">
-Back
-</a>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="Active" <?= $fra['status'] === 'Active' ? 'selected' : '' ?>>Active</option>
+                            <option value="Disabled" <?= $fra['status'] === 'Disabled' ? 'selected' : '' ?>>Disabled</option>
+                        </select>
+                    </div>
 
-</form>
+                    <button class="btn-primary" type="submit">Save Changes</button>
 
-</section>
+                    <a href="/index.php?page=view_my_fra" class="secondary-btn">Back</a>
+
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
 
 </div>
 

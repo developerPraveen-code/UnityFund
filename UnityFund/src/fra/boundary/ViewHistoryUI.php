@@ -1,8 +1,6 @@
 <?php
 
 // USER STORY #33: View Completed FRA History
-// BCE Role: Boundary
-// Allows Fundraiser to view completed FRA history.
 
 require_once __DIR__ . '/../../login/boundary/UserSession.php';
 require_once __DIR__ . '/../controller/ViewHistoryController.php';
@@ -15,46 +13,62 @@ if ($_SESSION['user']['role'] !== 'fundraiser') {
     exit();
 }
 
+$user = $_SESSION['user'];
 $controller = new ViewHistoryController();
-$historyList = $controller->getCompletedFRA($_SESSION['user']['id']);
-?>
+$historyList = $controller->getCompletedFRA($user['id']);
 
+$activePage = 'history';
+?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>View Completed FRA History</title>
+    <meta charset="UTF-8">
+    <title>Completed FRA History</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="page-center">
-<section class="dashboard-card">
+<div class="app-layout">
 
-<h1>Completed FRA History</h1>
+    <?php require_once __DIR__ . '/../../fundraiser/boundary/FundraiserSidebar.php'; ?>
 
-<table class="table">
-<tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>Category</th>
-    <th>Goal</th>
-    <th>Status</th>
-</tr>
+    <main class="main-content">
 
-<?php foreach ($historyList as $fra): ?>
-<tr>
-    <td><?= $fra['fraId'] ?></td>
-    <td><?= htmlspecialchars($fra['title']) ?></td>
-    <td><?= htmlspecialchars($fra['category']) ?></td>
-    <td>$<?= number_format($fra['goalAmount'], 2) ?></td>
-    <td><?= htmlspecialchars($fra['status']) ?></td>
-</tr>
-<?php endforeach; ?>
-</table>
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="menu-icon">☰</div>
+                <div class="topbar-title">
+                    <h2>Completed FRA History</h2>
+                    <p>Fundraiser</p>
+                </div>
+            </div>
+        </header>
 
-<a href="/index.php?page=fundraiser_dashboard" class="secondary-btn">Back</a>
+        <section class="dashboard-bg">
 
-</section>
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Goal</th>
+                    <th>Status</th>
+                </tr>
+                <?php foreach ($historyList as $fra): ?>
+                <tr>
+                    <td><?= $fra['fraId'] ?></td>
+                    <td><?= htmlspecialchars($fra['title']) ?></td>
+                    <td><?= htmlspecialchars($fra['category']) ?></td>
+                    <td>$<?= number_format((float)$fra['goalAmount'], 2) ?></td>
+                    <td><?= htmlspecialchars($fra['status']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+
+        </section>
+
+    </main>
+
 </div>
 
 </body>
