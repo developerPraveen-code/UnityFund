@@ -3,7 +3,7 @@ name: Mirror to GitLab
 on:
   push:
     branches:
-      - prod  # Add any branches you want to sync
+      - main  # Add any branches you want to sync
 
 jobs:
   mirror_to_gitlab:
