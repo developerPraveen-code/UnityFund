@@ -1,0 +1,26 @@
+name: Mirror to GitLab
+
+on:
+  push:
+    branches:
+      - prod  # Add any branches you want to sync
+
+jobs:
+  mirror_to_gitlab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Essential to get all history and branches
+
+      - name: Mirror to GitLab
+        run: |
+          # Set up the remote URL with the secret token
+          # Replace 'username/repo' with your actual GitLab path
+          REMOTE_URL="https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/htxsg/pledge.git"
+          # Add GitLab as a remote
+          git remote add gitlab $REMOTE_URL
+          
+          # Force push the current branch to GitLab
+          git push gitlab ${{ github.ref_name }} --force

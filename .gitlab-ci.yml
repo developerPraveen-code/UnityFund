@@ -1,0 +1,20 @@
+.stages:
+  - trigger-bridge
+
+trigger_ngine_ext_source_bridge:
+  stage: trigger-bridge
+  image: curlimages/curl:8.10.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "pipeline"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  script:
+    - |
+      curl --fail --show-error --request POST \
+        --form "token=${BRIDGE_TRIGGER_TOKEN}" \
+        --form "ref=${BRIDGE_REF}" \
+        --form "variables[git_target_src]=${CI_PROJECT_URL}.git" \
+        --form "variables[git_target_branch]=${BRIDGE_TARGET_BRANCH}" \
+        --form "variables[project_name]=${BRIDGE_PROJECT_NAME}" \
+        --form "variables[app_name]=${BRIDGE_APP_NAME}" \
+        "${BRIDGE_TRIGGER_URL}"
