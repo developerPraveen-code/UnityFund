@@ -18,7 +18,7 @@ jobs:
         run: |
           # Set up the remote URL with the secret token
           # Replace 'username/repo' with your actual GitLab path
-          REMOTE_URL="https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/htxsg/pledge.git"
+          REMOTE_URL="https://oauth2:${{ secrets.GITLAB_TOKEN }}@sgts.gitlab-dedicated.com/wog/htx/cloud/ngine/ngine-l1/apps/pledge/unityfund.git"
           # Add GitLab as a remote
           git remote add gitlab $REMOTE_URL
           
