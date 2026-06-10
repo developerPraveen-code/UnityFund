@@ -5,22 +5,76 @@ on:
     branches:
       - main  # Add any branches you want to sync
 
+env:
+  GL_HOST: sgts.gitlab-dedicated.com
+  GL_GROUP_PATH: wog/htx/cloud/ngine/ngine-l1/apps/pledge  # parent subgroup (must already exist)
+  GL_PROJECT_PATH: unityfund                               # project slug to create/push to
+
 jobs:
   mirror_to_gitlab:
     runs-on: ubuntu-latest
+    env:
+      GL_TOKEN: ${{ secrets.GITLAB_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Essential to get all history and branches
 
+      - name: Ensure GitLab project exists
+        run: |
+          set -euo pipefail
+          API="https://${GL_HOST}/api/v4"
+
+          # URL-encode a path for use in an API URL segment (/ -> %2F)
+          enc() { printf '%s' "$1" | sed 's#/#%2F#g'; }
+          ENC_GROUP="$(enc "${GL_GROUP_PATH}")"
+          ENC_FULL="$(enc "${GL_GROUP_PATH}/${GL_PROJECT_PATH}")"
+
+          # 1) If the project already exists (and the token can see it), do nothing.
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            --header "PRIVATE-TOKEN: ${GL_TOKEN}" "${API}/projects/${ENC_FULL}")
+          if [ "$code" = "200" ]; then
+            echo "Project '${GL_GROUP_PATH}/${GL_PROJECT_PATH}' already exists. Skipping creation."
+            exit 0
+          fi
+          echo "Project lookup returned HTTP ${code}; attempting to create it."
+
+          # 2) Resolve the parent group (namespace) id.
+          resp=$(curl -sS -w $'\n%{http_code}' \
+            --header "PRIVATE-TOKEN: ${GL_TOKEN}" "${API}/groups/${ENC_GROUP}")
+          http=${resp##*$'\n'}; body=${resp%$'\n'*}
+          if [ "$http" != "200" ]; then
+            echo "ERROR: cannot resolve parent group '${GL_GROUP_PATH}' (HTTP ${http})."
+            echo "Verify the group path exists, the token has 'api' scope, and its user is a member."
+            echo "$body"; exit 1
+          fi
+          NS_ID=$(printf '%s' "$body" | jq -r '.id')
+          echo "Parent group id: ${NS_ID}"
+
+          # 3) Create the project under that group.
+          resp=$(curl -sS -w $'\n%{http_code}' --request POST \
+            --header "PRIVATE-TOKEN: ${GL_TOKEN}" "${API}/projects" \
+            --data-urlencode "name=${GL_PROJECT_PATH}" \
+            --data-urlencode "path=${GL_PROJECT_PATH}" \
+            --data "namespace_id=${NS_ID}" \
+            --data "visibility=private")
+          http=${resp##*$'\n'}; body=${resp%$'\n'*}
+          if [ "$http" = "201" ]; then
+            echo "Project created."
+          elif printf '%s' "$body" | grep -q 'has already been taken'; then
+            echo "Project already exists (created concurrently). Continuing."
+          else
+            echo "ERROR: project creation failed (HTTP ${http})."
+            echo "Likely missing 'api' scope or project-creation rights in the subgroup."
+            echo "$body"; exit 1
+          fi
+
       - name: Mirror to GitLab
         run: |
-          # Set up the remote URL with the secret token
-          # Replace 'username/repo' with your actual GitLab path
-          REMOTE_URL="https://oauth2:${{ secrets.GITLAB_TOKEN }}@sgts.gitlab-dedicated.com/wog/htx/cloud/ngine/ngine-l1/apps/pledge/unityfund.git"
-          # Add GitLab as a remote
-          git remote add gitlab $REMOTE_URL
-          
-          # Force push the current branch to GitLab
-          git push gitlab ${{ github.ref_name }} --force
+          set -euo pipefail
+          # Build the authenticated remote URL from the shared env vars
+          REMOTE_URL="https://oauth2:${GL_TOKEN}@${GL_HOST}/${GL_GROUP_PATH}/${GL_PROJECT_PATH}.git"
+          git remote add gitlab "$REMOTE_URL"
+          # Force push the pushed branch to GitLab
+          git push gitlab "${{ github.ref_name }}" --force
