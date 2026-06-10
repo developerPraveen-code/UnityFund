@@ -7,7 +7,7 @@ on:
 
 env:
   GL_HOST: sgts.gitlab-dedicated.com
-  GL_GROUP_PATH: wog/htx/cloud/ngine/ngine-l1/apps/pledge  # parent subgroup (must already exist)
+  GL_GROUP_PATH: wog/htx/cloud/ngine/ngine-l1/apps/vibecoding  # parent subgroup (must already exist)
   GL_PROJECT_PATH: unityfund                               # project slug to create/push to
 
 jobs:
